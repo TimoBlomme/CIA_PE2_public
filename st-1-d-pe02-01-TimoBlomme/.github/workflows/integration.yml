@@ -1,0 +1,34 @@
+name: Integration
+
+on:
+  pull_request:
+    branches: [dev, main]
+  workflow_dispatch:
+
+jobs:
+  restore-build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '7.0.x'
+
+    - name: Output student name
+      run: echo "YOUR NAME HERE"
+
+    - name: Restore dependencies
+      working-directory: ./src
+      run: dotnet restore
+
+    - name: Build solution
+      working-directory: ./src
+      run: dotnet build --no-restore
+
+    - name: Run all tests
+      working-directory: ./src
+      run: dotnet test --no-build
